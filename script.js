@@ -2,7 +2,8 @@ const APP_STATE = {
     theme: localStorage.getItem('theme') || 'light',
     scanHistory: JSON.parse(localStorage.getItem('scanHistory')) || [],
     currentProduct: null,
-    isScanning: false
+    isScanning: false,
+    scannerInstance: null
 };
 
 const elements = {
@@ -69,51 +70,47 @@ function setupExampleBarcodes() {
 function startBarcodeScanner() {
     elements.cameraView.classList.add('active');
     APP_STATE.isScanning = true;
-    
-    Quagga.init({
-        inputStream: {
-            name: "Live",
-            type: "LiveStream",
-            target: document.querySelector('#barcode-scanner'),
-            constraints: {
-                width: { ideal: 1280 },
-                height: { ideal: 720 },
-                facingMode: "environment"
+
+    if (!APP_STATE.scannerInstance) {
+        APP_STATE.scannerInstance = new Html5Qrcode("barcode-scanner");
+    }
+
+    const config = {
+        fps: 15,
+        qrbox: { width: 280, height: 150 },
+        aspectRatio: 1.777778
+    };
+
+    APP_STATE.scannerInstance.start(
+        { facingMode: "environment" },
+        config,
+        (decodedText) => {
+            if (/^\d{8,13}$/.test(decodedText)) {
+                vibrateDevice();
+                stopBarcodeScanner();
+                elements.barcodeInput.value = decodedText;
+                fetchProductData(decodedText);
             }
         },
-        locator: {
-            patchSize: "medium",
-            halfSample: true
-        },
-        numOfWorkers: navigator.hardwareConcurrency || 2,
-        decoder: {
-            readers: ["ean_reader", "ean_8_reader", "upc_reader", "upc_e_reader", "code_128_reader", "code_39_reader"]
-        },
-        locate: true
-    }, (err) => {
-        if (err) {
-            showToast('Camera access denied or not available');
-            stopBarcodeScanner();
-            return;
+        (errorMessage) => {
         }
-        Quagga.start();
-    });
-
-    Quagga.onDetected((result) => {
-        if (APP_STATE.isScanning) {
-            const barcode = result.codeResult.code;
-            vibrateDevice();
-            stopBarcodeScanner();
-            elements.barcodeInput.value = barcode;
-            fetchProductData(barcode);
-        }
+    ).catch(err => {
+        showToast('Camera access denied or not available');
+        stopBarcodeScanner();
     });
 }
 
 function stopBarcodeScanner() {
     APP_STATE.isScanning = false;
-    Quagga.stop();
-    elements.cameraView.classList.remove('active');
+    if (APP_STATE.scannerInstance) {
+        APP_STATE.scannerInstance.stop().then(() => {
+            elements.cameraView.classList.remove('active');
+        }).catch(err => {
+            elements.cameraView.classList.remove('active');
+        });
+    } else {
+        elements.cameraView.classList.remove('active');
+    }
 }
 
 function handleManualSearch() {
@@ -139,7 +136,7 @@ async function fetchProductData(barcode) {
 
     try {
         const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json`, {
-            headers: { 'User-Agent': 'NutriScan - 2.0 - dippanbhusal@github' }
+            headers: { 'User-Agent': 'NutriScan - 3.0' }
         });
         const data = await response.json();
         
@@ -150,11 +147,11 @@ async function fetchProductData(barcode) {
             addToScanHistory(barcode, product);
             displayProduct(product);
         } else {
-            showToast('Product not found. Please try another barcode.');
+            showToast('Product not found in database.');
             hideLoading();
         }
     } catch (error) {
-        showToast('Failed to fetch product data. Check your connection.');
+        showToast('Failed to fetch product data. Check connection.');
         hideLoading();
     }
 }
@@ -164,22 +161,29 @@ function cleanTag(tag) {
     return tag.replace(/^[a-z]{2}:/, '').replace(/-/g, ' ');
 }
 
-function getNutrientLevelHtml(levels) {
-    if (!levels) return '';
-    const mapLevel = (val) => {
-        if (val === 'low') return '<span style="color: #10b981; font-weight: 600;">Low</span>';
-        if (val === 'moderate') return '<span style="color: #f59e0b; font-weight: 600;">Moderate</span>';
-        if (val === 'high') return '<span style="color: #ef4444; font-weight: 600;">High</span>';
-        return 'Unknown';
-    };
-    return `
-        <div class="nutrient-levels" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; font-size: 14px; background: var(--bg-color); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-            <div><strong>Fat:</strong> ${mapLevel(levels.fat)}</div>
-            <div><strong>Saturated Fat:</strong> ${mapLevel(levels['saturated-fat'])}</div>
-            <div><strong>Sugars:</strong> ${mapLevel(levels.sugars)}</div>
-            <div><strong>Salt:</strong> ${mapLevel(levels.salt)}</div>
-        </div>
-    `;
+function generateDynamicNutrientsList(nutriments) {
+    if (!nutriments || Object.keys(nutriments).length === 0) return '<p>No detailed nutrient data available.</p>';
+    
+    let html = '<div class="nutrition-grid">';
+    
+    for (const [key, value] of Object.entries(nutriments)) {
+        if (key.endsWith('_100g') && typeof value === 'number') {
+            const cleanName = key.replace('_100g', '').replace(/-/g, ' ').toUpperCase();
+            let unit = 'g';
+            if (cleanName.includes('KCAL') || cleanName.includes('ENERGY')) unit = '';
+            else if (cleanName.includes('SODIUM') || cleanName.includes('CHOLESTEROL') || cleanName.includes('VITAMIN') || cleanName.includes('CALCIUM') || cleanName.includes('IRON')) unit = 'mg';
+
+            html += `
+            <div class="nutrient-card">
+                <div class="nutrient-header">
+                    <span class="nutrient-name" style="font-size: 12px;">${cleanName}</span>
+                    <span class="nutrient-value">${Number(value).toFixed(2)}${unit}</span>
+                </div>
+            </div>`;
+        }
+    }
+    html += '</div>';
+    return html;
 }
 
 function displayProduct(product) {
@@ -201,7 +205,7 @@ function displayProduct(product) {
             
             <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
                 ${product.brands ? `<div class="product-brand"><i class="fas fa-tag"></i> ${product.brands}</div>` : ''}
-                ${product.quantity ? `<div class="product-brand"><i class="fas fa-box"></i> ${product.quantity}</div>` : ''}
+                ${product.quantity ? `<div class="product-brand"><i class="fas fa-balance-scale"></i> ${product.quantity}</div>` : ''}
             </div>
             
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
@@ -221,44 +225,11 @@ function displayProduct(product) {
                 </div>
             </div>` : ''}
 
-            <div class="quick-facts">
-                ${product.nutriments?.['energy-kcal_100g'] ? `
-                <div class="fact-card">
-                    <i class="fas fa-fire"></i>
-                    <div class="fact-value">${Math.round(product.nutriments['energy-kcal_100g'])}</div>
-                    <div class="fact-label">Kcal / 100g</div>
-                </div>` : ''}
-                
-                ${product.nutriments?.fat_100g ? `
-                <div class="fact-card">
-                    <i class="fas fa-droplet"></i>
-                    <div class="fact-value">${product.nutriments.fat_100g}g</div>
-                    <div class="fact-label">Fat / 100g</div>
-                </div>` : ''}
-                
-                ${product.nutriments?.carbohydrates_100g ? `
-                <div class="fact-card">
-                    <i class="fas fa-wheat-awn"></i>
-                    <div class="fact-value">${product.nutriments.carbohydrates_100g}g</div>
-                    <div class="fact-label">Carbs / 100g</div>
-                </div>` : ''}
-                
-                ${product.nutriments?.proteins_100g ? `
-                <div class="fact-card">
-                    <i class="fas fa-dumbbell"></i>
-                    <div class="fact-value">${product.nutriments.proteins_100g}g</div>
-                    <div class="fact-label">Protein / 100g</div>
-                </div>` : ''}
-            </div>
-
-            <h3 class="section-title"><i class="fas fa-chart-pie"></i> Detailed Nutrition Facts</h3>
-            <div class="nutrition-grid">
-                ${generateNutritionCards(product.nutriments)}
-            </div>
-            ${getNutrientLevelHtml(product.nutrient_levels)}
+            <h3 class="section-title"><i class="fas fa-chart-pie"></i> Comprehensive Nutrition Facts (per 100g)</h3>
+            ${generateDynamicNutrientsList(product.nutriments)}
 
             ${product.ingredients_text ? `
-            <h3 class="section-title"><i class="fas fa-list"></i> Ingredients</h3>
+            <h3 class="section-title"><i class="fas fa-list"></i> Full Ingredients List</h3>
             <div class="ingredients-section">
                 <div class="ingredients-text">${product.ingredients_text}</div>
             </div>` : ''}
@@ -281,22 +252,22 @@ function displayProduct(product) {
             <div class="additives-warning">
                 <i class="fas fa-flask"></i>
                 <div>
-                    <strong>Contains ${product.additives_tags.length} additives</strong>
+                    <strong>Contains ${product.additives_tags.length} Identified Additives</strong>
                     <p style="font-size: 14px; margin-top: 4px;">${product.additives_tags.map(a => cleanTag(a)).join(', ')}</p>
                 </div>
             </div>` : ''}
 
-            <h3 class="section-title"><i class="fas fa-layer-group"></i> Product Meta</h3>
+            <h3 class="section-title"><i class="fas fa-layer-group"></i> Detailed Product Meta</h3>
             <div class="category-chips">
                 ${product.categories_tags ? product.categories_tags.map(cat => `<span class="category-chip">${cleanTag(cat)}</span>`).join('') : ''}
-                ${product.labels_tags ? product.labels_tags.map(label => `<span class="category-chip" style="background: var(--primary-color); color: #fff;">${cleanTag(label)}</span>`).join('') : ''}
             </div>
 
-            <div style="margin-top: 16px; font-size: 14px; color: var(--text-secondary); line-height: 1.8;">
+            <div style="margin-top: 16px; font-size: 14px; color: var(--text-secondary); line-height: 1.8; padding: 20px; background: var(--bg-color); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
                 ${product.packaging ? `<p><strong><i class="fas fa-box-open"></i> Packaging:</strong> ${product.packaging}</p>` : ''}
-                ${product.manufacturing_places ? `<p><strong><i class="fas fa-industry"></i> Manufacturing:</strong> ${product.manufacturing_places}</p>` : ''}
-                ${product.countries ? `<p><strong><i class="fas fa-globe"></i> Countries:</strong> ${product.countries}</p>` : ''}
-                ${product.stores ? `<p><strong><i class="fas fa-store"></i> Stores:</strong> ${product.stores}</p>` : ''}
+                ${product.manufacturing_places ? `<p><strong><i class="fas fa-industry"></i> Manufacturing Places:</strong> ${product.manufacturing_places}</p>` : ''}
+                ${product.origins ? `<p><strong><i class="fas fa-seedling"></i> Origins of Ingredients:</strong> ${product.origins}</p>` : ''}
+                ${product.countries ? `<p><strong><i class="fas fa-globe"></i> Countries Sold In:</strong> ${product.countries}</p>` : ''}
+                ${product.stores ? `<p><strong><i class="fas fa-store"></i> Available Stores:</strong> ${product.stores}</p>` : ''}
             </div>
 
             <div class="action-buttons">
@@ -319,35 +290,6 @@ function displayProduct(product) {
     setTimeout(() => {
         elements.productSection.scrollIntoView({behavior: 'smooth', block: 'start' });
     }, 300);
-}
-
-function generateNutritionCards(nutriments) {
-    if (!nutriments) return '';
-    const nutrients = [
-        {key: 'sugars_100g', label: 'Sugars', unit: 'g', max: 50 },
-        {key: 'salt_100g', label: 'Salt', unit: 'g', max: 6 },
-        {key: 'saturated-fat_100g', label: 'Saturated Fat', unit: 'g', max: 20 },
-        {key: 'fiber_100g', label: 'Fiber', unit: 'g', max: 25 },
-        {key: 'sodium_100g', label: 'Sodium', unit: 'mg', max: 2300 },
-        {key: 'calcium_100g', label: 'Calcium', unit: 'mg', max: 1000 },
-        {key: 'iron_100g', label: 'Iron', unit: 'mg', max: 18 }
-    ];
-
-    return nutrients.map(nutrient => {
-        const value = nutriments[nutrient.key];
-        if (value === undefined || value === null) return '';
-        const percentage = Math.min((value / nutrient.max) * 100, 100);
-        return `
-        <div class="nutrient-card">
-            <div class="nutrient-header">
-                <span class="nutrient-name">${nutrient.label}</span>
-                <span class="nutrient-value">${Number(value).toFixed(2)}${nutrient.unit}</span>
-            </div>
-            <div class="nutrient-bar">
-                <div class="nutrient-fill" style="width: ${percentage}%"></div>
-            </div>
-        </div>`;
-    }).join('');
 }
 
 function getNutriScoreInfo(grade) {
