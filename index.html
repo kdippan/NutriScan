@@ -4,69 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NutriScan - Smart Food Barcode Scanner</title>
-    
-    <meta name="description" content="NutriScan is a smart food barcode scanner. Instantly analyze nutrition facts, Nutri-Score health ratings, and allergen warnings to make informed dietary choices.">
-    <meta name="keywords" content="barcode scanner, nutrition facts, food health, nutri-score, food scanner app, ingredient analysis, allergen warnings">
+    <meta name="description" content="NutriScan - Smart food barcode scanner. Analyze nutrition, health ratings, and make informed food choices instantly.">
+    <meta name="keywords" content="barcode scanner, nutrition facts, food health, nutri-score, food scanner app">
     <meta name="author" content="Dippan Bhusal">
     <meta name="robots" content="index, follow">
-
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://neutriscan.netlify.app/">
     <meta property="og:title" content="NutriScan - Smart Food Scanner">
-    <meta property="og:description" content="Scan any food product and get instant nutrition analysis, ingredient breakdown, and health ratings.">
-    <meta property="og:image" content="./android-chrome-512x512.png">
-    
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="NutriScan - Smart Food Scanner">
-    <meta name="twitter:description" content="Analyze your food instantly with NutriScan's live barcode scanner.">
-
-    <meta name="theme-color" content="#667eea">
+    <meta property="og:description" content="Scan any food product and get instant nutrition analysis and health ratings">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#10b981">
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <link rel="apple-touch-icon" href="./apple-touch-icon.png">
     <link rel="manifest" href="./manifest.json">
-
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.lordicon.com/lordicon.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js" defer></script>
     <link rel="stylesheet" href="styles.css">
-
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebApplication",
-          "name": "NutriScan",
-          "url": "https://neutriscan.netlify.app/",
-          "description": "A professional barcode scanning web application that uses Open Food Facts API to display comprehensive product information.",
-          "applicationCategory": "HealthApplication",
-          "operatingSystem": "Any",
-          "author": {
-            "@type": "Person",
-            "name": "Dippan Bhusal",
-            "url": "https://github.com/KDippan"
-          }
-        },
-        {
-          "@type": "FAQPage",
-          "mainEntity": [{
-            "@type": "Question",
-            "name": "How accurate is the Nutri-Score?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The Nutri-Score is calculated based on the nutritional information provided by the Open Food Facts database, which is constantly updated by contributors worldwide."
-            }
-          }, {
-            "@type": "Question",
-            "name": "Does the app work offline?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "NutriScan requires an internet connection to fetch real-time product data, but your previously scanned items are saved locally in your scan history."
-            }
-          }]
-        }
-      ]
+      "@type": "WebApplication",
+      "name": "NutriScan",
+      "url": "https://neutriscan.netlify.app/",
+      "description": "A professional barcode scanning web application that uses Open Food Facts API to display comprehensive product information.",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Web Browser",
+      "author": {
+        "@type": "Person",
+        "name": "Dippan Bhusal",
+        "url": "https://github.com/KDippan"
+      }
     }
     </script>
 </head>
@@ -74,48 +41,53 @@
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
         <i class="fa-solid fa-moon"></i>
     </button>
-
     <header class="hero-header">
         <div class="hero-content">
-            <lord-icon src="https://cdn.lordicon.com/rmkahxvq.json" trigger="loop" colors="primary:#ffffff,secondary:#a5b4fc" style="width:80px;height:80px"></lord-icon>
+            <lord-icon src="https://cdn.lordicon.com/rmkahxvq.json" trigger="loop" colors="primary:#ffffff,secondary:#a7f3d0" style="width:80px;height:80px"></lord-icon>
             <h1 class="app-title">NutriScan</h1>
             <p class="app-tagline">Scan. Analyze. Eat Smart.</p>
         </div>
     </header>
-
     <main class="main-container">
-        <section class="ui-card scanner-section" id="scannerSection">
+        <section class="ui-card scanner-card" id="scannerSection">
             <div class="card-header">
                 <i class="fas fa-barcode"></i>
-                <h2>Product Scanner</h2>
+                <h2>Scan Your Product</h2>
             </div>
-            
             <div class="scanner-actions">
                 <button class="btn btn-primary btn-camera" id="startCameraBtn">
                     <i class="fas fa-camera"></i>
                     <span>Start Camera Scan</span>
                 </button>
-                
                 <div class="divider"><span>or manual entry</span></div>
-                
-                <form class="manual-input" id="manualSearchForm" onsubmit="event.preventDefault();">
+                <div class="manual-input">
                     <div class="input-group">
+                        <input type="text" id="barcodeInput" placeholder="Enter Barcode Number" pattern="[0-9]*" maxlength="13">
                         <i class="fas fa-keyboard input-icon"></i>
-                        <input type="text" id="barcodeInput" placeholder="Enter 13-digit barcode" pattern="[0-9]*" maxlength="13" required>
                     </div>
-                    <button type="submit" class="btn btn-secondary" id="searchBtn">
+                    <button class="btn btn-secondary" id="searchBtn">
                         <i class="fas fa-search"></i> Search
                     </button>
-                </form>
+                </div>
+            </div>
+            <div class="example-barcodes">
+                <h4><i class="fas fa-star"></i> Try These Examples</h4>
+                <div class="barcode-chips">
+                    <button class="chip" data-barcode="3017620422003"><i class="fa fa-coffee"></i> Nutella</button>
+                    <button class="chip" data-barcode="5449000000996"><i class="fas fa-glass-whiskey"></i> Coca-Cola</button>
+                    <button class="chip" data-barcode="8076809513883"><i class="fas fa-pizza-slice"></i> Barilla Pasta</button>
+                </div>
             </div>
         </section>
-
         <div class="camera-view" id="cameraView">
             <div class="camera-overlay">
                 <div class="scan-frame">
                     <div class="scan-line"></div>
                 </div>
-                <p class="scan-instruction">Align barcode within the frame</p>
+                <div class="scan-instruction">
+                    <i class="fas fa-barcode"></i>
+                    <p>Align barcode within frame</p>
+                </div>
             </div>
             <div id="barcode-scanner"></div>
             <div class="camera-controls">
@@ -124,57 +96,67 @@
                 </button>
             </div>
         </div>
-
         <section class="product-section" id="productSection">
-            <div class="loading-state" id="loadingState" style="display: none;">
-                <lord-icon src="https://cdn.lordicon.com/xjovhxra.json" trigger="loop" colors="primary:#667eea" style="width:80px;height:80px"></lord-icon>
-                <p>Analyzing nutritional data...</p>
+            <div class="loading-state" id="loadingState">
+                <lord-icon src="https://cdn.lordicon.com/xjovhxra.json" trigger="loop" colors="primary:#10b981" style="width:100px;height:100px"></lord-icon>
+                <p>Analyzing product...</p>
             </div>
             <div class="product-content" id="productContent"></div>
         </section>
-
-        <section class="ui-card faq-section" id="faqSection">
-            <div class="card-header">
-                <i class="fas fa-circle-question"></i>
-                <h2>Frequently Asked Questions</h2>
+        <section class="ui-card history-section" id="historySection">
+            <div class="card-header history-header">
+                <div class="header-title">
+                    <i class="fas fa-history"></i>
+                    <h2>Scan History</h2>
+                </div>
+                <button class="btn-text" id="clearHistoryBtn">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
             </div>
-            <div class="faq-accordion">
-                <details class="faq-item">
-                    <summary>How accurate is the Nutri-Score?</summary>
-                    <div class="faq-answer">The Nutri-Score is based on data from the Open Food Facts database. It scientifically calculates the balance between healthy nutrients (fiber, protein) and those to limit (sugars, sodium, saturated fats).</div>
-                </details>
-                <details class="faq-item">
-                    <summary>Does NutriScan work offline?</summary>
-                    <div class="faq-answer">While live scanning requires an internet connection to fetch fresh product data, your scan history is saved locally on your device for quick reference anytime.</div>
-                </details>
-                <details class="faq-item">
-                    <summary>Where does the data come from?</summary>
-                    <div class="faq-answer">All data is sourced from Open Food Facts, an open, crowdsourced database of food products globally.</div>
-                </details>
+            <div class="history-list" id="historyList">
+                <div class="empty-state">
+                    <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="loop" colors="primary:#64748b" style="width:80px;height:80px"></lord-icon>
+                    <p>No scanned products yet</p>
+                    <small>Start scanning to see your history</small>
+                </div>
             </div>
         </section>
-
-        <section class="ui-card dev-section" id="devSection">
+        <section class="ui-card info-section" id="infoSection">
             <div class="dev-profile">
                 <img src="https://github.com/KDippan.png" alt="Dippan Bhusal" class="dev-avatar">
                 <div class="dev-info">
                     <h3>Dippan Bhusal</h3>
                     <p class="role">Full Stack Developer</p>
-                    <p class="bio">Passionate about building intuitive web applications and exploring modern APIs. Connect with me for collaborations or feedback!</p>
+                    <p class="bio">Passionate about building intuitive web applications and exploring modern APIs. Creator of NutriScan, ZeroShare, and PaperWallah.</p>
                     <div class="dev-links">
-                        <a href="https://github.com/KDippan" target="_blank" class="btn btn-outline"><i class="fab fa-github"></i> GitHub</a>
-                        </div>
+                        <a href="https://github.com/KDippan" target="_blank" class="btn btn-outline"><i class="fab fa-github"></i> @KDippan</a>
+                    </div>
                 </div>
             </div>
+            <hr class="section-divider">
+            <div class="faq-accordion">
+                <h3><i class="fas fa-circle-question"></i> Quick FAQ</h3>
+                <details class="faq-item">
+                    <summary>How accurate is the Nutri-Score?</summary>
+                    <div class="faq-answer">The Nutri-Score is based on data directly from the Open Food Facts database, calculating the balance between healthy nutrients (fiber, protein) and those to limit (sugars, sodium, saturated fats).</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Where does the data come from?</summary>
+                    <div class="faq-answer">All data is sourced from Open Food Facts, an open, crowdsourced database of food products globally under the Open Database License.</div>
+                </details>
+            </div>
         </section>
-
     </main>
-    
+    <footer class="footer">
+        <p>© 2026 Dippan Bhusal. Powered by Open Food Facts.</p>
+    </footer>
+    <button class="fab" id="quickScanFab" aria-label="Quick scan">
+        <i class="fas fa-camera"></i>
+    </button>
     <div class="toast" id="toast">
-        <i class="fas fa-info-circle"></i>
+        <i class="fas fa-check-circle"></i>
         <span id="toastMessage"></span>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
