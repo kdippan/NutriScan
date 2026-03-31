@@ -1,270 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriScan - Smart Food Barcode Scanner</title>
     
-    <!-- Favicons - Standard -->
-    <link rel="icon" type="image/x-icon" href="./favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="./favicon-48x48.png">
+    <meta name="description" content="NutriScan is a smart food barcode scanner. Instantly analyze nutrition facts, Nutri-Score health ratings, and allergen warnings to make informed dietary choices.">
+    <meta name="keywords" content="barcode scanner, nutrition facts, food health, nutri-score, food scanner app, ingredient analysis, allergen warnings">
+    <meta name="author" content="Dippan Bhusal">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://neutriscan.netlify.app/">
+    <meta property="og:title" content="NutriScan - Smart Food Scanner">
+    <meta property="og:description" content="Scan any food product and get instant nutrition analysis, ingredient breakdown, and health ratings.">
+    <meta property="og:image" content="./android-chrome-512x512.png">
     
-    <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="57x57" href="./apple-touch-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="./apple-touch-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="./apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="./apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="./apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="./apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="./apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="./apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-180x180.png">
-    
-    <!-- Android Chrome Icons -->
-    <link rel="icon" type="image/png" sizes="192x192" href="./android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="./android-chrome-512x512.png">
-    
-    <!-- Safari Pinned Tab -->
-    <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#667eea">
-    
-    <!-- Microsoft Tiles -->
-    <meta name="msapplication-TileColor" content="#667eea">
-    <meta name="msapplication-TileImage" content="./mstile-144x144.png">
-    <meta name="msapplication-config" content="./browserconfig.xml">
-    
-    <!-- Theme Colors -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="NutriScan - Smart Food Scanner">
+    <meta name="twitter:description" content="Analyze your food instantly with NutriScan's live barcode scanner.">
+
     <meta name="theme-color" content="#667eea">
-    <meta name="msapplication-navbutton-color" content="#667eea">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <!-- Apple Web App -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="NutriScan">
-    
-    <!-- Web App Manifest -->
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
     <link rel="manifest" href="./manifest.json">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.lordicon.com/lordicon.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "NutriScan",
-      "alternateName": "NutriScan - Smart Food Scanner",
-      "url": "https://neutriscan.netlify.app/",
-      "logo": "https://neutriscan.netlify.app/",
-      "description": "A professional barcode scanning web application that uses Open Food Facts API to display comprehensive product information, nutritional data, health ratings, and smart recommendations.",
-      "applicationCategory": "HealthApplication",
-      "operatingSystem": "Web Browser",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "author": {
-        "@type": "Person",
-        "name": "Dippan Bhusal",
-        "url": "https://github.com/KDippan",
-        "jobTitle": "Full Stack Developer",
-        "sameAs": [
-          "https://github.com/KDippan"
-        ]
-      },
-      "creator": {
-        "@type": "Person",
-        "name": "Dippan Bhusal",
-        "url": "https://github.com/KDippan"
-      },
-      "publisher": {
-        "@type": "Person",
-        "name": "Dippan Bhusal"
-      },
-      "datePublished": "2025-10-18",
-      "dateModified": "2025-10-18",
-      "inLanguage": "en-US",
-      "isAccessibleForFree": true,
-      "browserRequirements": "Requires JavaScript. Requires HTML5.",
-      "featureList": [
-        "Live camera barcode scanning",
-        "Manual barcode entry",
-        "Nutri-Score health rating",
-        "Comprehensive nutritional facts",
-        "Allergen warnings",
-        "Ingredient analysis",
-        "Scan history",
-        "Dark/Light mode",
-        "Offline support"
-      ],
-      "screenshot": "https://neutriscan.netlify.app/",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "ratingCount": "1250",
-        "bestRating": "5",
-        "worstRating": "1"
-      },
-      "citation": {
-        "@type": "CreativeWork",
-        "name": "Open Food Facts",
-        "url": "https://world.openfoodfacts.org"
-      }
-    }
-    </script>
-      <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
+      "@graph": [
         {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://neutriscan.netlify.app/"
+          "@type": "WebApplication",
+          "name": "NutriScan",
+          "url": "https://neutriscan.netlify.app/",
+          "description": "A professional barcode scanning web application that uses Open Food Facts API to display comprehensive product information.",
+          "applicationCategory": "HealthApplication",
+          "operatingSystem": "Any",
+          "author": {
+            "@type": "Person",
+            "name": "Dippan Bhusal",
+            "url": "https://github.com/KDippan"
+          }
         },
         {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Scanner",
-          "item": "https://neutriscan.netlify.app/#scannerSection"
+          "@type": "FAQPage",
+          "mainEntity": [{
+            "@type": "Question",
+            "name": "How accurate is the Nutri-Score?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The Nutri-Score is calculated based on the nutritional information provided by the Open Food Facts database, which is constantly updated by contributors worldwide."
+            }
+          }, {
+            "@type": "Question",
+            "name": "Does the app work offline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "NutriScan requires an internet connection to fetch real-time product data, but your previously scanned items are saved locally in your scan history."
+            }
+          }]
         }
       ]
     }
     </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NutriScan - Smart food barcode scanner. Analyze nutrition, health ratings, and make informed food choices instantly.">
-    <meta name="keywords" content="barcode scanner, nutrition facts, food health, nutri-score, food scanner app">
-    <meta name="author" content="Dippan Bhusal">
-    
-    <meta property="og:title" content="NutriScan - Smart Food Scanner">
-    <meta property="og:description" content="Scan any food product and get instant nutrition analysis and health ratings">
-    <meta property="og:type" content="website">
-    
-    <title>NutriScan - Smart Food Scanner</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdn.lordicon.com/lordicon.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-    
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="particles-bg">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
-
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-        <i class="material-icons">dark_mode</i>
+        <i class="fa-solid fa-moon"></i>
     </button>
 
     <header class="hero-header">
         <div class="hero-content">
-            <div class="logo-container">
-                <lord-icon
-                    src="https://cdn.lordicon.com/rmkahxvq.json"
-                    trigger="loop"
-                    colors="primary:#ffffff,secondary:#667eea"
-                    style="width:80px;height:80px">
-                </lord-icon>
-            </div>
+            <lord-icon src="https://cdn.lordicon.com/rmkahxvq.json" trigger="loop" colors="primary:#ffffff,secondary:#a5b4fc" style="width:80px;height:80px"></lord-icon>
             <h1 class="app-title">NutriScan</h1>
             <p class="app-tagline">Scan. Analyze. Eat Smart.</p>
         </div>
     </header>
 
     <main class="main-container">
-        <section class="scanner-section" id="scannerSection">
-            <div class="glass-card scanner-card">
-                <div class="card-header">
-                    <i class="fas fa-barcode"></i>
-                    <h2>Scan Your Product</h2>
-                </div>
+        <section class="ui-card scanner-section" id="scannerSection">
+            <div class="card-header">
+                <i class="fas fa-barcode"></i>
+                <h2>Product Scanner</h2>
+            </div>
+            
+            <div class="scanner-actions">
+                <button class="btn btn-primary btn-camera" id="startCameraBtn">
+                    <i class="fas fa-camera"></i>
+                    <span>Start Camera Scan</span>
+                </button>
                 
-                <div class="scanner-actions">
-                    <button class="btn btn-primary btn-camera" id="startCameraBtn">
-                        <lord-icon
-                            src="https://cdn.lordicon.com/zqxjldeh.json"
-                            trigger="hover"
-                            colors="primary:#ffffff"
-                            style="width:24px;height:24px">
-                        </lord-icon>
-                        <span>Start Camera Scan</span>
+                <div class="divider"><span>or manual entry</span></div>
+                
+                <form class="manual-input" id="manualSearchForm" onsubmit="event.preventDefault();">
+                    <div class="input-group">
+                        <i class="fas fa-keyboard input-icon"></i>
+                        <input type="text" id="barcodeInput" placeholder="Enter 13-digit barcode" pattern="[0-9]*" maxlength="13" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" id="searchBtn">
+                        <i class="fas fa-search"></i> Search
                     </button>
-                    
-                    <div class="divider">
-                        <span>or</span>
-                    </div>
-                    
-                    <div class="manual-input">
-                        <div class="input-group">
-                            <input 
-                                type="text" 
-                                id="barcodeInput" 
-                                placeholder=" "
-                                pattern="[0-9]*"
-                                maxlength="13"
-                                aria-label="Barcode number">
-                            <label for="barcodeInput">Enter Barcode Number</label>
-                            <i class="fas fa-keyboard input-icon"></i>
-                        </div>
-                        <button class="btn btn-secondary" id="searchBtn">
-                            <i class="fas fa-search"></i>
-                            <span>Search</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="scan-tips">
-                    <h3><i class="fas fa-lightbulb"></i> Quick Tips</h3>
-                    <ul>
-                        <li><i class="fas fa-check-circle"></i> Hold steady and align barcode</li>
-                        <li><i class="fas fa-sun"></i> Ensure good lighting</li>
-                        <li><i class="fas fa-compress"></i> Keep barcode flat</li>
-                        <li><i class="fas fa-sync-alt"></i> Try different angles if needed</li>
-                    </ul>
-                </div>
-
-                <div class="example-barcodes">
-                    <h4><i class="fas fa-star"></i> Try These Examples</h4>
-                    <div class="barcode-chips">
-                        <button class="chip" data-barcode="3017620422003">
-                            <i class="fas fa-coffee"></i> Nutella
-                        </button>
-                        <button class="chip" data-barcode="5449000000996">
-                            <i class="fas fa-glass-whiskey"></i> Coca-Cola
-                        </button>
-                        <button class="chip" data-barcode="8076809513883">
-                            <i class="fas fa-pizza-slice"></i> Barilla Pasta
-                        </button>
-                    </div>
-                </div>
+                </form>
             </div>
         </section>
 
         <div class="camera-view" id="cameraView">
             <div class="camera-overlay">
                 <div class="scan-frame">
-                    <div class="corner corner-tl"></div>
-                    <div class="corner corner-tr"></div>
-                    <div class="corner corner-bl"></div>
-                    <div class="corner corner-br"></div>
                     <div class="scan-line"></div>
                 </div>
-                <div class="scan-instruction">
-                    <i class="fas fa-barcode"></i>
-                    <p>Align barcode within frame</p>
-                </div>
+                <p class="scan-instruction">Align barcode within the frame</p>
             </div>
             <div id="barcode-scanner"></div>
             <div class="camera-controls">
-                <button class="btn-icon" id="toggleFlashBtn" aria-label="Toggle flashlight">
-                    <i class="fas fa-bolt"></i>
-                </button>
                 <button class="btn-icon btn-stop" id="stopCameraBtn" aria-label="Stop scanning">
                     <i class="fas fa-times"></i>
                 </button>
@@ -272,81 +126,52 @@
         </div>
 
         <section class="product-section" id="productSection">
-            <div class="loading-state" id="loadingState">
-                <lord-icon
-                    src="https://cdn.lordicon.com/xjovhxra.json"
-                    trigger="loop"
-                    colors="primary:#667eea"
-                    style="width:100px;height:100px">
-                </lord-icon>
-                <p>Analyzing product...</p>
+            <div class="loading-state" id="loadingState" style="display: none;">
+                <lord-icon src="https://cdn.lordicon.com/xjovhxra.json" trigger="loop" colors="primary:#667eea" style="width:80px;height:80px"></lord-icon>
+                <p>Analyzing nutritional data...</p>
             </div>
+            <div class="product-content" id="productContent"></div>
+        </section>
 
-            <div class="product-content" id="productContent">
-                <!-- Product details will be inserted here -->
+        <section class="ui-card faq-section" id="faqSection">
+            <div class="card-header">
+                <i class="fas fa-circle-question"></i>
+                <h2>Frequently Asked Questions</h2>
+            </div>
+            <div class="faq-accordion">
+                <details class="faq-item">
+                    <summary>How accurate is the Nutri-Score?</summary>
+                    <div class="faq-answer">The Nutri-Score is based on data from the Open Food Facts database. It scientifically calculates the balance between healthy nutrients (fiber, protein) and those to limit (sugars, sodium, saturated fats).</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Does NutriScan work offline?</summary>
+                    <div class="faq-answer">While live scanning requires an internet connection to fetch fresh product data, your scan history is saved locally on your device for quick reference anytime.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Where does the data come from?</summary>
+                    <div class="faq-answer">All data is sourced from Open Food Facts, an open, crowdsourced database of food products globally.</div>
+                </details>
             </div>
         </section>
 
-        <section class="history-section" id="historySection">
-            <div class="glass-card">
-                <div class="card-header">
-                    <i class="fas fa-history"></i>
-                    <h2>Scan History</h2>
-                    <button class="btn-text" id="clearHistoryBtn">
-                        <i class="fas fa-trash"></i> Clear All
-                    </button>
-                </div>
-                <div class="history-list" id="historyList">
-                    <div class="empty-state">
-                        <lord-icon
-                            src="https://cdn.lordicon.com/nocovwne.json"
-                            trigger="loop"
-                            colors="primary:#64748b"
-                            style="width:80px;height:80px">
-                        </lord-icon>
-                        <p>No scanned products yet</p>
-                        <small>Start scanning to see your history</small>
-                    </div>
+        <section class="ui-card dev-section" id="devSection">
+            <div class="dev-profile">
+                <img src="https://github.com/KDippan.png" alt="Dippan Bhusal" class="dev-avatar">
+                <div class="dev-info">
+                    <h3>Dippan Bhusal</h3>
+                    <p class="role">Full Stack Developer</p>
+                    <p class="bio">Passionate about building intuitive web applications and exploring modern APIs. Connect with me for collaborations or feedback!</p>
+                    <div class="dev-links">
+                        <a href="https://github.com/KDippan" target="_blank" class="btn btn-outline"><i class="fab fa-github"></i> GitHub</a>
+                        </div>
                 </div>
             </div>
         </section>
+
     </main>
-
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3><i class="fas fa-user-circle"></i> Created By</h3>
-                <p class="author-name">Dippan Bhusal</p>
-                <p class="author-role">Full Stack Developer</p>
-                <a href="https://github.com/KDippan" target="_blank" class="github-link">
-                    <i class="fab fa-github"></i> @KDippan
-                </a>
-            </div>
-            
-            <div class="footer-section">
-                <h3><i class="fas fa-database"></i> Data Source</h3>
-                <p>Open Food Facts</p>
-                <a href="https://world.openfoodfacts.org" target="_blank">
-                    <i class="fas fa-external-link-alt"></i> Visit Website
-                </a>
-                <p class="license">Open Database License (ODbL)</p>
-            </div>
-            
-            <div class="footer-section">
-                <h3><i class="fas fa-info-circle"></i> App Info</h3>
-                <p>Version 1.0.0</p>
-                <p>© 2025 Dippan Bhusal</p>
-                <p>All rights reserved</p>
-            </div>
-        </div>
-    </footer>
-
-    <button class="fab" id="quickScanFab" aria-label="Quick scan">
-        <i class="fas fa-camera"></i>
-    </button>
-
+    
     <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
+        <i class="fas fa-info-circle"></i>
         <span id="toastMessage"></span>
     </div>
 
